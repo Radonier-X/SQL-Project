@@ -103,7 +103,6 @@ def ask_and_save_settings():
     new_host = input("MySQL host : ")
     new_user = input("MySQL username : ")
     new_password = input("MySQL password : ")
-    new_database = input("Database name : ")
 
     if new_host != "":
         DB_HOST = new_host
@@ -111,8 +110,6 @@ def ask_and_save_settings():
         DB_USER = new_user
     if new_password != "":
         DB_PASSWORD = new_password
-    if new_database != "":
-        DB_DATABASE = new_database
 
     save_settings()
     print("Connection details saved to", SETTINGS_FILE)
