@@ -32,6 +32,7 @@ import os
 SETTINGS_FILE = "db_settings.txt"
 
 # ---- default values, used only if db_settings.txt does not exist yet ----
+# Values used when testing
 DB_HOST = "localhost"
 DB_USER = "root"
 DB_PASSWORD = "sandship@119002"
@@ -190,4 +191,6 @@ if __name__ == "__main__":
     if choice.upper() == "Y":
         ask_and_save_settings()
 
-    setup_database()
+    choice = input("Do you want to resetup DB using schema? (Y/N): ")
+    if choice.upper() == "Y":
+        setup_database()

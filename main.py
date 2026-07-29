@@ -18,6 +18,7 @@ All four files must be kept in the SAME folder, because Python's
 import statement looks for them alongside main.py.
 """
 
+from db_connection import check_database_ready
 from guest_operations import *
 from room_operations import *
 from reservation_operations import *
@@ -32,6 +33,13 @@ def main():
     Displays the menu in a loop and calls the correct function
     based on the user's choice, until the user chooses to exit.
     """
+    # FAILSAFE: do not show the menu at all if the database is not ready.
+    # check_database_ready() lives in db_connection.py -- it confirms the
+    # database and all required tables exist, and offers to run the
+    # one-time setup from db_config.py if something is missing.
+    if not check_database_ready():
+        return
+
     while True:
         print("\n========== HOTEL RESERVATION SYSTEM ==========")
  
@@ -61,7 +69,8 @@ def main():
         print("0.  Exit")
  
         choice = input("Enter your choice: ")
- 
+
+        # GUEST OPERTATIONS
         if choice == "1":
             add_guest()
         elif choice == "2":
@@ -70,6 +79,7 @@ def main():
             modify_guest()
         elif choice == "4":
             delete_guest()
+        # ROOM OPERATIONS
         elif choice == "5":
             add_room()
         elif choice == "6":
@@ -78,6 +88,7 @@ def main():
             modify_room()
         elif choice == "8":
             delete_room()
+        # RESERVATION OPERATIONS
         elif choice == "9":
             book_reservation()
         elif choice == "10":
@@ -91,6 +102,7 @@ def main():
         elif choice == "14":
             checkout_guest()
         elif choice == "15":
+        # HOTEL STATISTICS
             search_by_guest_name()
         elif choice == "16":
             view_statistics()
