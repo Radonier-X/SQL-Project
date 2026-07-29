@@ -172,25 +172,109 @@ def setup_database():
     print("Database setup complete! You can now run main.py")
 
 
+def wipe_database():
+    """
+    DANGER -- deletes every row from all three tables (guests, rooms,
+    reservations), but keeps the tables themselves, so the program
+    can be used again immediately afterwards without needing to run
+    setup_database() again. Useful for resetting the sample data
+    before a fresh demo/viva run.
+ 
+    Rows must be deleted in this order: reservations FIRST, then
+    rooms and guests. This is because reservations has foreign keys
+    pointing to both guests and rooms, so its rows have to be removed
+    before the rows they point to can be removed.
+ 
+    Asks for confirmation TWICE, since this action cannot be undone.
+    """
+    confirm1 = input("\nThis will PERMANENTLY DELETE all guests, rooms and "
+                      "reservations. Continue? (Y/N): ")
+    if confirm1.upper() != "Y":
+        print("Wipe cancelled.")
+        return
+ 
+    confirm2 = input("Are you REALLY sure? Type WIPE in capital letters to confirm: ")
+    if confirm2 != "WIPE":
+        print("Wipe cancelled.")
+        return
+ 
+    conn = mysql.connector.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_DATABASE
+    )
+    cursor = conn.cursor()
+ 
+    try:
+        cursor.execute("DELETE FROM reservations")
+        cursor.execute("DELETE FROM rooms")
+        cursor.execute("DELETE FROM guests")
+ 
+        # reset the AUTO_INCREMENT counters so the next guest/reservation
+        # added after the wipe starts again from ID 1
+        cursor.execute("ALTER TABLE guests AUTO_INCREMENT = 1")
+        cursor.execute("ALTER TABLE reservations AUTO_INCREMENT = 1")
+ 
+        conn.commit()
+        print("\nDatabase wiped. All tables are now empty.")
+    except mysql.connector.Error as e:
+        print("Error while wiping database:", e)
+ 
+    cursor.close()
+    conn.close()
+
+
 # Load any previously saved settings as soon as this module is
 # imported by ANY file (db_connection.py, main.py, etc.), so the
 # saved values are always used instead of the hardcoded defaults.
 load_settings()
 
 
+def admin_menu():
+    """
+    Small menu that ties together the three "whole database" admin
+    functions in this file:
+      1. Enter/change MySQL connection details (ask_and_save_settings)
+      2. Set up the database from hotel_db_schema.sql (setup_database)
+      3. Wipe all data from the database (wipe_database)
+ 
+    This menu is deliberately kept OUT of main.py. main.py is meant
+    for day-to-day hotel staff use (booking guests, checking rooms,
+    etc.), and should not have powerful, database-wide actions like
+    "delete everything" sitting in the same menu as normal use. An
+    administrator who needs these tools runs db_config.py directly
+    instead.
+    """
+    while True:
+        print("\n===== Hotel Reservation System - Database Admin =====")
+        print("1. Enter/change MySQL connection details")
+        print("2. Set up database (run hotel_db_schema.sql)")
+        print("3. Wipe database (DANGER: deletes ALL data)")
+        print("0. Exit")
+ 
+        choice = input("Enter your choice: ")
+ 
+        if choice == "1":
+            ask_and_save_settings()
+        elif choice == "2":
+            setup_database()
+        elif choice == "3":
+            wipe_database()
+        elif choice == "0":
+            print("Exiting database admin menu.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+ 
+ 
 # ------------------------------------------------------------------
 # Everything below this line only runs when db_config.py is executed
 # DIRECTLY (python db_config.py). When main.py or any other module
 # does "from db_config import DB_HOST, ...", Python sets
 # __name__ to "db_config" (not "__main__"), so this block is
-# skipped -- the setup will never run by accident.
+# skipped -- the admin menu will never appear by accident, and
+# main.py never gets access to these powerful functions.
 # ------------------------------------------------------------------
 if __name__ == "__main__":
-    print("=== Hotel Reservation System - Database Setup ===")
-    choice = input("Do you want to enter/change your MySQL connection details? (Y/N): ")
-    if choice.upper() == "Y":
-        ask_and_save_settings()
-
-    choice = input("Do you want to resetup DB using schema? (Y/N): ")
-    if choice.upper() == "Y":
-        setup_database()
+    admin_menu()
