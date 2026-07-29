@@ -38,6 +38,7 @@ def add_guest():
     cursor.close()
     conn.close()
 
+
 def modify_guest():
     """
     Updates the details of an existing guest.

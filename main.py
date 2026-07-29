@@ -28,54 +28,71 @@ def main():
     Displays the menu in a loop and calls the correct function
     based on the user's choice, until the user chooses to exit.
     """
+    """
+    Displays the menu in a loop and calls the correct function
+    based on the user's choice, until the user chooses to exit.
+    """
     while True:
         print("\n========== HOTEL RESERVATION SYSTEM ==========")
-
-        print("\n============== GUEST OPERATIONS ==============")
-        print("1. Register New Guest")
-        print("2. Modify Guest Details")
-        print("3. Delete Guest")
-        print("4. Display All Guests")
-
-        print("\n=========== RESERVATION OPERATIONS ===========")
-        print("5. Add New Room")
-        print("6. Book a Reservation")
-        print("7. View All Reservations")
-        print("8. View Available Rooms")
-        print("9. Cancel Reservation")
-        print("10. Check-Out / Generate Bill")
-        print("11. Search Reservation by Guest Name")
-
-        print("\n============== HOTEL STATISTICS ==============")
-
-        print("12. View Hotel Statistics")
-        print("0. Exit")
+ 
+        print("\n============== GUEST OPERATIONS ===============")
+        print("1.  Register New Guest        (Create)")
+        print("2.  Display All Guests        (Read)")
+        print("3.  Modify Guest Details      (Update)")
+        print("4.  Delete Guest              (Delete)")
+ 
+        print("\n=============== ROOM OPERATIONS ================")
+        print("5.  Add New Room              (Create)")
+        print("6.  View Available Rooms      (Read)")
+        print("7.  Modify Room Details       (Update)")
+        print("8.  Delete Room               (Delete)")
+ 
+        print("\n============ RESERVATION OPERATIONS ============")
+        print("9.  Book a Reservation        (Create)")
+        print("10. View All Reservations     (Read)")
+        print("11. Modify Reservation        (Update)")
+        print("12. Cancel Reservation        (status change)")
+        print("13. Delete Reservation        (Delete)")
+        print("14. Check-Out / Generate Bill")
+        print("15. Search Reservation by Guest Name")
+ 
+        print("\n============== HOTEL STATISTICS ================")
+        print("16. View Hotel Statistics")
+        print("0.  Exit")
  
         choice = input("Enter your choice: ")
  
         if choice == "1":
             add_guest()
         elif choice == "2":
-            modify_guest()
-        elif choice == "3":
-            delete_guest()
-        elif choice == "4":
-            add_room()
-        elif choice == "5":
             display_all_guests()
+        elif choice == "3":
+            modify_guest()
+        elif choice == "4":
+            delete_guest()
+        elif choice == "5":
+            add_room()
         elif choice == "6":
-            book_reservation()
-        elif choice == "7":
-            view_reservations()
-        elif choice == "8":
             view_available_rooms()
+        elif choice == "7":
+            modify_room()
+        elif choice == "8":
+            delete_room()
         elif choice == "9":
-            cancel_reservation()
+            book_reservation()
         elif choice == "10":
-            checkout_guest()
+            view_reservations()
         elif choice == "11":
-            search_by_guest_name()
+            modify_reservation()
         elif choice == "12":
+            cancel_reservation()
+        elif choice == "13":
+            delete_reservation()
+        elif choice == "14":
+            checkout_guest()
+        elif choice == "15":
+            search_by_guest_name()
+        elif choice == "16":
             view_statistics()
         elif choice == "0":
             print("Thank you for using the Hotel Reservation System.")
