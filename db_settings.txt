@@ -1,0 +1,4 @@
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=sandship@119002
+DB_DATABASE=hotel_db
